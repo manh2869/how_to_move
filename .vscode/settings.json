@@ -1,8 +1,0 @@
-{
-    "code-runner.executorMap": {
-        "cpp": "cd $dir && g++ $fileName -o $fileNameWithoutExt -I$workspaceRoot/raylib/src -L$workspaceRoot/raylib/src -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 && DRI_PRIME=0 $dir$fileNameWithoutExt"
-    },
-    "code-runner.runInTerminal": true,
-    "code-runner.saveFileBeforeRun": true
-}
-
