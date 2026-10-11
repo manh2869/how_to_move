@@ -10,6 +10,8 @@ struct ball
     CircleShape shape;
     Color col;
     Vector2f vec;
+    Vector2f veclocityb;
+    float angle;
 };
 
 int main()
@@ -47,7 +49,11 @@ int main()
             ball balls;
             balls.shape = CircleShape(gen() % 80 + 20);
             balls.vec = {float(gen() % 1000), float(gen() % 700)};
+            balls.veclocityb = {float(gen() % 1000), float(gen() % 700)};
             balls.col = Color(gen() % 256, gen() % 256, gen() % 256, gen() % 256);
+            balls.angle = gen() % 360 + 1;
+            balls.shape.setPosition(balls.vec);
+            balls.shape.setFillColor(balls.col);
             c.push_back(balls);
             veclocity.x = -veclocity.x;
         }
@@ -56,21 +62,35 @@ int main()
             ball balls;
             balls.shape = CircleShape(gen() % 80 + 20);
             balls.vec = {float(gen() % 1000), float(gen() % 700)};
+            balls.veclocityb = {float(gen() % 1000), float(gen() % 700)};
             balls.col = Color(gen() % 256, gen() % 256, gen() % 256, gen() % 256);
+            balls.angle = gen() % 360 + 1;
+            balls.shape.setPosition(balls.vec);
+            balls.shape.setFillColor(balls.col);
             c.push_back(balls);
             veclocity.y = -veclocity.y;
         }
         window.clear(Color::White);
-        for (ball b : c)
+        for (ball &b : c)
         {
             b.shape.setFillColor(b.col);
-            b.shape.setPosition(b.vec);
-
             window.draw(b.shape);
+            if (b.shape.getPosition().x <= 0 || b.shape.getPosition().x >= 1000 - 2 * b.shape.getRadius())
+            {
+                b.veclocityb.x = -b.veclocityb.x;
+            }
+            if (b.shape.getPosition().y <= 0 || b.shape.getPosition().y >= 700 - 2 * b.shape.getRadius())
+            {
+                b.veclocityb.y = -b.veclocityb.y;
+            }
+
+            b.vec.x += b.veclocityb.x * dt * speed * cos(M_PI / 180 * int(b.angle));
+            b.vec.y += b.veclocityb.y * dt * speed * sin(M_PI / 180 * int(b.angle));
+            b.shape.setPosition(b.vec);
         }
 
-        pos.x += veclocity.x * dt * speed;
-        pos.y += veclocity.y * dt * speed;
+        pos.x += veclocity.x * dt * speed * cos(M_PI / 180 * 40);
+        pos.y += veclocity.y * dt * speed * sin(M_PI / 180 * 40);
 
         circle.setPosition(pos);
         window.draw(circle);
