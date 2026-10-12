@@ -33,7 +33,7 @@ int main()
     Vector2 veclocity = {100.0f, 100.0f};
 
     vector<ball> c;
-    float speed = 3;
+    float speed = 30;
 
     while (window.isOpen())
     {
