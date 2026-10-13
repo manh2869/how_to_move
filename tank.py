@@ -2,12 +2,34 @@ import pygame
 import pymunk
 import move
 import physics
+import math
 
 
 def draw_box(screen, body, shape, color):
     points = [body.local_to_world(v) for v in shape.get_vertices()]
     points = [(int(p.x), int(p.y)) for p in points]
     pygame.draw.polygon(screen, color, points)
+
+
+def aim_at(tank_body, target_body):
+    dx = target_body.position.x - tank_body.position.x
+    dy = target_body.position.y - tank_body.position.y
+
+    angle = math.atan2(dy, dx)
+
+    tank_body.angle = angle
+
+
+def shoot(space, tank_body, rec_radius, barrel_len):
+    tip = tank_body.local_to_world((rec_radius + barrel_len + 6, 0))
+
+    bullet_body, bullet_shape = physics.create_ball(
+        space, position=tip, mass=1, radius=5
+    )
+
+    bullet_body.velocity = pymunk.Vec2d(1200, 0).rotated(tank_body.angle)
+
+    return bullet_body, bullet_shape
 
 
 pygame.init()
@@ -30,7 +52,7 @@ r1_body, r1_shape = physics.create_box(
 )
 
 r_body, r_shape = physics.create_box(
-    space, position=(500, 600), mass=1, width=rec_radius * 2, height=rec_radius * 2
+    space, position=(900, 400), mass=1, width=rec_radius * 2, height=rec_radius * 2
 )
 
 barrel_len = 40
@@ -59,7 +81,8 @@ speed = 300
 attack = False
 
 bullet = []
-
+shoot_timer = 0
+shoot_interval = 0.5
 while running:
     dt = clock.tick(120) / 1000.0
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -76,13 +99,19 @@ while running:
                 bullet.append((bullet_body, bullet_shape))
 
     move.move1(r1_body, 100)
+    
+    aim_at(r1_body, r_body)
+    
+    shoot_timer += dt
 
-    space.step(dt)
+    if shoot_timer >= shoot_interval:
+        b = shoot(space, r1_body, rec_radius, barrel_len)
+
+        bullet.append(b)
+        shoot_timer = 0
 
     space.step(1 / 120)
-
     screen.fill((30, 30, 30))
-
     for b in bullet:
         pygame.draw.circle(screen, (255, 0, 0), (b[0].position), 5)
     for b in bullet[:]:
@@ -91,7 +120,6 @@ while running:
         if x > W - 20 or x < 20 or y > H - 20 or y < 20:
             space.remove(body, shape)
             bullet.remove(b)
-    print(len(bullet))
 
     r_x, r_y = r_body.position
     r1_x, r1_y = r1_body.position
