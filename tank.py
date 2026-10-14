@@ -21,13 +21,17 @@ def aim_at(tank_body, target_body):
     tank_body.angle = angle
 
 
+BULLET = 1
+TARGET = 2
+
+
 def shoot(space, tank_body, rec_radius, barrel_len):
     tip = tank_body.local_to_world((rec_radius + barrel_len + 6, 0))
 
     bullet_body, bullet_shape = physics.create_ball(
         space, position=tip, mass=1, radius=5
     )
-
+    bullet_shape.collision_type = BULLET
     bullet_body.velocity = pymunk.Vec2d(1200, 0).rotated(tank_body.angle)
 
     return bullet_body, bullet_shape
@@ -71,7 +75,17 @@ r1_body, r1_shape = physics.create_box(
 r_body, r_shape = physics.create_box(
     space, position=(900, 400), mass=1, width=rec_radius * 2, height=rec_radius * 2
 )
+r_shape.collision_type = TARGET
 
+
+def on_bullet_hit(arbiter, space, data):
+    a, b = arbiter.shapes
+    for s, other in ((a, b), (b, a)):
+        if s.collision_type == BULLET:
+            finished.setdefault(s, 1 if other.collision_type == TARGET else 0)
+
+
+space.on_collision(BULLET, None, begin=on_bullet_hit)
 barrel_len = 40
 barrel_w = 10
 
@@ -98,6 +112,8 @@ speed = 300
 attack = False
 
 bullet = []
+finished = {}
+
 collect_data.create_csv()
 shoot_timer = 0
 shoot_interval = 0.5
@@ -106,18 +122,18 @@ data_timer = 0
 data_interval = 0.5
 while running:
     dt = clock.tick(120) / 1000.0
-    mouse_x, mouse_y = pygame.mouse.get_pos()
+    # mouse_x, mouse_y = pygame.mouse.get_pos()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                tip = r1_body.local_to_world((rec_radius + barrel_len + 6, 0))
-                bullet_body, bullet_shape = physics.create_ball(
-                    space, position=tip, mass=1, radius=5
-                )
-                bullet_body.velocity = pymunk.Vec2d(1200, 0).rotated(r1_body.angle)
-                bullet.append((bullet_body, bullet_shape))
+        # if event.type == pygame.KEYDOWN:
+        #     if event.key == pygame.K_SPACE:
+        #         tip = r1_body.local_to_world((rec_radius + barrel_len + 6, 0))
+        #         bullet_body, bullet_shape = physics.create_ball(
+        #             space, position=tip, mass=1, radius=5
+        #         )
+        #         bullet_body.velocity = pymunk.Vec2d(1200, 0).rotated(r1_body.angle)
+        #         bullet.append((bullet_body, bullet_shape))
 
     # move.move1(r1_body, 300)
 
@@ -138,23 +154,20 @@ while running:
 
     if shoot_timer > shoot_interval:
         b = shoot(space, r1_body, rec_radius, barrel_len)
-        bullet.append(b)
+        bullet.append((b[0], b[1], collect_data.make_state(r1_body, r_body)))
         shoot_timer = 0
     for b in bullet[:]:
-        if check_hit(r_shape, b[1]):
-            if data_timer >= data_interval:
-                collect_data.save_data(r1_body, r_body, 1)
-                data_timer = 0
-        else:
-            if data_timer >= data_interval:
-                collect_data.save_data(r1_body, r_body, 1)
-                data_timer = 0
-        body, shape = b
+        body, shape, state = b
         x, y = body.position
         if x > W - 20 or x < 20 or y > H - 20 or y < 20:
             space.remove(body, shape)
             bullet.remove(b)
 
+        if shape in finished:
+            collect_data.save_data(state, finished[shape])
+            space.remove(body, shape)
+            bullet.remove(b)
+    finished.clear()
     r_x, r_y = r_body.position
     r1_x, r1_y = r1_body.position
 
