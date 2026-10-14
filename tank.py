@@ -159,10 +159,7 @@ while running:
     for b in bullet[:]:
         body, shape, state = b
         x, y = body.position
-        if x > W - 20 or x < 20 or y > H - 20 or y < 20:
-            space.remove(body, shape)
-            bullet.remove(b)
-
+        
         if shape in finished:
             collect_data.save_data(state, finished[shape])
             space.remove(body, shape)
