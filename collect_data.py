@@ -8,27 +8,22 @@ def create_csv():
         writer = csv.writer(file)
         writer.writerow(
             [
-                "tank_x",
-                "tank_y",
-                "target_x",
-                "target_y",
-                "dx",
-                "dy",
+                "vx",
+                "vy",
+                "speed_t",
                 "distance",
-                "angle",
                 "hit",
             ]
         )
 
 
-def make_state(tank_body, target_body):
+def make_state(tank_body, target_body, vx, vy, speed):
     tx, ty = tank_body.position
     gx, gy = target_body.position
     dx, dy = gx - tx, gy - ty
     dist = (dx**2 + dy**2) ** 0.5
-    return [round(v, 1) for v in (tx, ty, gx, gy, dx, dy, dist)] + [
-        round(tank_body.angle, 3)
-    ]
+
+    return [round(v, 1) for v in (vx, vy, speed, dist)]
 
 
 def save_data(state, hit):
