@@ -1,13 +1,5 @@
 import pygame
-import Pymunk
-
-
-def ground(space, W, H):
-
-    ground_shape = Pymunk.create_wall(space, 0, H, W, H, 10)
-    ground_shape = Pymunk.create_wall(space, 0, 0, 0, H, 10)
-    ground_shape = Pymunk.create_wall(space, W, 0, W, H, 10)
-    ground_shape = Pymunk.create_wall(space, 0, 0, W, 0, 10)
+import physic
 
 
 def draw_bound(screen, W, H):
@@ -27,3 +19,11 @@ def draw_object(screen, r_body, r_shape, r_main_body, r_main_shape, barrel_shape
     draw_box(screen, r_body, r_shape, (100, 100, 100))
     draw_box(screen, r_main_body, r_main_shape, (100, 200, 100))
     draw_box(screen, r_main_body, barrel_shape, (200, 200, 200))
+
+
+def draw_grid(screen,W,H, cell_size):
+    color = (60, 60, 60)
+    for x in range(0, W, cell_size):
+        pygame.draw.line(screen, color, (x, 0), (x, H))
+    for y in range(0, H, cell_size):
+        pygame.draw.line(screen, color, (0, y), (W, y))
