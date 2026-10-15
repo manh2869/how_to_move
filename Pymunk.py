@@ -3,7 +3,7 @@ import pymunk
 
 def create_ball(space, position, mass=1, radius=25):
     moment = pymunk.moment_for_circle(mass, 0, radius)
-    
+
     body = pymunk.Body(mass, moment)
     body.position = position
 
@@ -40,3 +40,20 @@ def create_wall(space, x, y, x1, y1, radius=10):
     space.add(shape)
 
     return shape
+
+
+def create_barrel(space, r_main_body, rec_radius, barrel_len=40, barrel_w=10):
+    # barrel_len = 40
+    # barrel_w = 10
+    barrel_shape = pymunk.Poly(
+        r_main_body,
+        [
+            (rec_radius, -barrel_w / 2),
+            (rec_radius + barrel_len, -barrel_w / 2),
+            (rec_radius + barrel_len, barrel_w / 2),
+            (rec_radius, barrel_w / 2),
+        ],
+    )
+
+    space.add(barrel_shape)
+    return barrel_shape
