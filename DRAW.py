@@ -15,10 +15,24 @@ def draw_box(screen, body, shape, color):
     pygame.draw.polygon(screen, color, points)
 
 
-
-def draw_grid(screen,W,H, cell_size):
+def draw_grid(screen, W, H, cell_size):
     color = (60, 60, 60)
     for x in range(0, W, cell_size):
         pygame.draw.line(screen, color, (x, 0), (x, H))
     for y in range(0, H, cell_size):
         pygame.draw.line(screen, color, (0, y), (W, y))
+
+
+def draw_maze(screen, space):
+    maze_walls = physic.create_maze(space)
+    for wall in maze_walls:
+        a = wall.a
+        b = wall.b
+
+        pygame.draw.line(
+            screen,
+            (180, 180, 180),
+            (int(a.x), int(a.y)),
+            (int(b.x), int(b.y)),
+            int(wall.radius * 2),
+        )

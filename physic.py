@@ -83,3 +83,19 @@ def shoot(space, screen, r_main_body, bullet, rec_radius, running):
             space.remove(b[0], b[1])
             bullet.remove(b)
     return running
+
+
+def create_maze(space):
+    walls = []
+
+    # Tường ngang
+    # walls.append(create_wall(space, 200, 200, 600, 200, 10))
+    # walls.append(create_wall(space, 700, 300, 1000, 300, 10))
+    walls.append(create_wall(space, 200, 500, 500, 500, 10))
+
+    # Tường dọc
+    walls.append(create_wall(space, 200, 200, 200, 450, 10))
+    # walls.append(create_wall(space, 600, 200, 600, 400, 10))
+    # walls.append(create_wall(space, 800, 400, 800, 700, 10))
+
+    return walls

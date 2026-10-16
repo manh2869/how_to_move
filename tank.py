@@ -21,8 +21,7 @@ pygame.display.set_caption("tank")
 
 clock = pygame.time.Clock()
 space = pymunk.Space()
-space.gravity = (0, 0)
-space.damping = 0.6
+space.damping = 1
 
 
 player_body, player_shape, barrel_shape_m = player.create_player(space)
@@ -32,7 +31,7 @@ enemy_body, enemy_shape, barrel_shape_e = enemy.create_enemy(space)
 
 physic.create_ground(space, W, H)
 running = True
-speed = 150
+speed = 200
 
 
 bullet = []
@@ -48,6 +47,7 @@ while running:
 
     DRAW.draw_bound(screen, W, H)
     DRAW.draw_grid(screen, W, H, 50)
+    DRAW.draw_maze(screen, space)
     space.step(dt)
     pygame.display.flip()
 

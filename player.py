@@ -18,4 +18,4 @@ def draw_player(screen, body, shape, barrel_shape, color):
 
 
 def player_move(r_main_body, speed, dt):
-    move.move1(r_main_body, speed, dt)
+    move.move1(r_main_body, speed, dt,2)
