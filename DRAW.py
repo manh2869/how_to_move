@@ -23,8 +23,7 @@ def draw_grid(screen, W, H, cell_size):
         pygame.draw.line(screen, color, (0, y), (W, y))
 
 
-def draw_maze(screen, space):
-    maze_walls = physic.create_maze(space)
+def draw_maze(screen, maze_walls):
     for wall in maze_walls:
         a = wall.a
         b = wall.b

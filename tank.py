@@ -25,7 +25,7 @@ space.damping = 1
 
 
 player_body, player_shape, barrel_shape_m = player.create_player(space)
-
+maze = physic.create_maze(space)
 enemy_body, enemy_shape, barrel_shape_e = enemy.create_enemy(space)
 
 
@@ -38,16 +38,18 @@ bullet = []
 while running:
     dt = clock.tick(120) / 1000.0
     screen.fill((30, 30, 30))
-    running = physic.shoot(space, screen, player_body, bullet, 25, running)
+    running = physic.shoot(space, screen, player_body, enemy_shape, bullet, 25, running)
 
     player.player_move(player_body, speed, dt)
+    
+    
+    
+    
     player.draw_player(screen, player_body, player_shape, barrel_shape_m, BLUE)
-
     enemy.draw_enemy(screen, enemy_body, enemy_shape, barrel_shape_e, RED)
-
     DRAW.draw_bound(screen, W, H)
     DRAW.draw_grid(screen, W, H, 50)
-    DRAW.draw_maze(screen, space)
+    DRAW.draw_maze(screen, maze)
     space.step(dt)
     pygame.display.flip()
 
