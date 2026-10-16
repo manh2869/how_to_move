@@ -45,8 +45,6 @@ def create_wall(space, x, y, x1, y1, radius=10):
 
 
 def create_barrel(space, r_main_body, rec_radius, barrel_len=40, barrel_w=10):
-    # barrel_len = 40
-    # barrel_w = 10
     barrel_shape = pymunk.Poly(
         r_main_body,
         [
@@ -61,17 +59,16 @@ def create_barrel(space, r_main_body, rec_radius, barrel_len=40, barrel_w=10):
 
 
 def create_ground(space, W, H):
-    ground_shape = create_wall(space, 0, H, W, H, 10)
-    ground_shape = create_wall(space, 0, 0, 0, H, 10)
-    ground_shape = create_wall(space, W, 0, W, H, 10)
-    ground_shape = create_wall(space, 0, 0, W, 0, 10)
+    create_wall(space, 0, H, W, H, 10)
+    create_wall(space, 0, 0, 0, H, 10)
+    create_wall(space, W, 0, W, H, 10)
+    create_wall(space, 0, 0, W, 0, 10)
 
 
 def shoot(space, screen, r_main_body, bullet, rec_radius, running):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 tip = r_main_body.local_to_world((rec_radius + 40 + 6, 0))
@@ -81,7 +78,7 @@ def shoot(space, screen, r_main_body, bullet, rec_radius, running):
                 bullet_body.velocity = pymunk.Vec2d(1200, 0).rotated(r_main_body.angle)
                 bullet.append((bullet_body, bullet_shape, time.time()))
     for b in bullet:
-        pygame.draw.circle(screen, (255, 0, 0), (b[0].position), 5)
+        pygame.draw.circle(screen, (0, 255, 0), (b[0].position), 5)
         if time.time() - b[2] >= 7:
             space.remove(b[0], b[1])
             bullet.remove(b)

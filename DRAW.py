@@ -15,11 +15,6 @@ def draw_box(screen, body, shape, color):
     pygame.draw.polygon(screen, color, points)
 
 
-def draw_object(screen, r_body, r_shape, r_main_body, r_main_shape, barrel_shape):
-    draw_box(screen, r_body, r_shape, (100, 100, 100))
-    draw_box(screen, r_main_body, r_main_shape, (100, 200, 100))
-    draw_box(screen, r_main_body, barrel_shape, (200, 200, 200))
-
 
 def draw_grid(screen,W,H, cell_size):
     color = (60, 60, 60)
