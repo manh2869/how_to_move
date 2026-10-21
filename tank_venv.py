@@ -1,16 +1,8 @@
 import gymnasium as gym
 
-env = gym.make("Pendulum-v1", render_mode="human")
+env = gym.make("Blackjack-v1")
 
 observation, info = env.reset()
 
-episode_over = False
-
-while not episode_over:
-    action = env.action_space.sample()
-
-    observation, reward, terminated, truncated, info = env.step(action)
-
-    episode_over = terminated or truncated
-
-env.close()
+print("State:", observation)
+print("Actions:", env.action_space)
