@@ -23,15 +23,15 @@ def draw_grid(screen, W, H, cell_size):
         pygame.draw.line(screen, color, (0, y), (W, y))
 
 
-def draw_maze(screen, maze_walls):
-    for wall in maze_walls:
-        a = wall.a
-        b = wall.b
+# def draw_maze(screen, maze_walls):
+#     for wall in maze_walls:
+#         a = wall.a
+#         b = wall.b
 
-        pygame.draw.line(
-            screen,
-            (180, 180, 180),
-            (int(a.x), int(a.y)),
-            (int(b.x), int(b.y)),
-            int(wall.radius * 2),
-        )
+#         pygame.draw.line(
+#             screen,
+#             (180, 180, 180),
+#             (int(a.x), int(a.y)),
+#             (int(b.x), int(b.y)),
+#             int(wall.radius * 2),
+#         )

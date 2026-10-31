@@ -4,7 +4,7 @@ import DRAW
 
 
 def create_player(space):
-    rec_radius = 25
+    rec_radius = 20
     r_main_body, r_main_shape = physic.create_box(
         space, position=(100, 600), mass=10, width=rec_radius * 2, height=rec_radius * 2
     )

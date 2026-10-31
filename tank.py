@@ -2,7 +2,6 @@ import pygame
 import pymunk
 import physic
 import DRAW
-
 import player
 import enemy
 
@@ -25,7 +24,7 @@ space.damping = 1
 
 
 player_body, player_shape, barrel_shape_m = player.create_player(space)
-maze = physic.create_maze(space)
+# maze = physic.create_maze(space)
 enemy_body, enemy_shape, barrel_shape_e = enemy.create_enemy(space)
 
 
@@ -41,15 +40,12 @@ while running:
     running = physic.shoot(space, screen, player_body, enemy_shape, bullet, 25, running)
 
     player.player_move(player_body, speed, dt)
-    
-    
-    
-    
+
     player.draw_player(screen, player_body, player_shape, barrel_shape_m, BLUE)
     enemy.draw_enemy(screen, enemy_body, enemy_shape, barrel_shape_e, RED)
     DRAW.draw_bound(screen, W, H)
     DRAW.draw_grid(screen, W, H, 50)
-    DRAW.draw_maze(screen, maze)
+    # DRAW.draw_maze(screen, maze)
     space.step(dt)
     pygame.display.flip()
 
