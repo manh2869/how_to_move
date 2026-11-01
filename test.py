@@ -1,7 +1,7 @@
 import random
 from collections import defaultdict
 
-GRID = 3
+GRID = 10
 TERMINAL = (GRID - 1, GRID - 1)
 ACTIONS = ("up", "down", "left", "right")
 DELTAS = {"up": (-1, 0), "down": (1, 0), "left": (0, -1), "right": (0, 1)}
@@ -58,11 +58,14 @@ def improve_policy():
     return Q.items()
 
 
-def move():
-    m = grid()
-    for Q in improve_policy():
-        m[Q[0][0]][Q[0][1]] = max(Q[1], key=Q[1].get)
-    return m
+for i in improve_policy():
+    print(i)
+
+# def move():
+#     m = grid()
+#     for Q in improve_policy():
+#         m[Q[0][0]][Q[0][1]] = max(Q[1], key=Q[1].get)
+#     return m
 
 
-print(move())
+# print(move())

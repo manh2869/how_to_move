@@ -1,39 +1,46 @@
-import pygame
 import math
 import tank
 import random
 from collections import defaultdict
 
-# player_body.position  Vec2d(161.75453397682008, 551.3755459330841)
-# player_body.angle   -12.694999999999558
-
 ACTIONS = [0, 1, 2, 3]
 MOVE = [[1, 0], [-1, 0], [0, 1], [0, -1]]
-rng = random.Random()
+rng = random.Random(1)
 
 
-def grid():
-    return [[0 for _ in range(tank.W // 50)] for _ in range(tank.H // 50)]
+c = [0, 0, 0, 0]
+n = [-math.inf, -math.inf, -math.inf, -math.inf]
+
+
+def grid(inf):
+    m = []
+    for i in range(tank.H // 50):
+        row = []
+        for j in range(tank.W // 50):
+            row.append(inf.copy())
+        m.append(row)
+    return m
 
 
 def step(i, j, action, player_pos):
     if [i, j] == player_pos:
         return i, j, 0.0, True
     dr, dc = MOVE[action]
-    r, c = i, j
-    nr = min(max(r + dr, 0), tank.W // 50)
-    nc = min(max(c + dc, 0), tank.H // 50)
-    return nr, nc, -1.0, (nr, nc) == player_pos
+
+    nr = min(max(i + dr, 0), tank.W // 50 - 1)
+    nc = min(max(j + dc, 0), tank.H // 50 - 1)
+    return nr, nc, -1.0, [nr, nc] == player_pos
 
 
-def rollout(Q, i, j, player_pos, max_steps=5000):
+def rollout(m, i, j, player_pos, max_steps=10000):
     trajectory = []
     for _ in range(max_steps):
-        if rng.random() < 0.2 or (i, j) not in Q:
+        if rng.random() < 0.2:
             action = rng.choice(ACTIONS)
         else:
-            action = max(Q[(i, j)], key=Q[(i, j)].get)
-        # action = random.randint(0, 3)
+            action = m[i][j].index(max(m[i][j]))
+        if max(m[i][j]) == 0:
+            action = rng.choice(ACTIONS)
         x, y, reward, done = step(i, j, action, player_pos)
         trajectory.append([i, j, action, reward])
         i, j = x, y
@@ -53,39 +60,13 @@ def episode_cost(trajectory, gamma=0.99):
 
 
 def improve_policy(enemy_body, player_pos):
-    Q = defaultdict(lambda: {a: 0.0 for a in ACTIONS})
-    counts = defaultdict(lambda: {a: 0 for a in ACTIONS})
+    m = grid(c)
+    count = grid(c)
     for _ in range(10000):
-        for i, j, a, G in episode_cost(
-            # rollout(Q, enemy_body.position.x, enemy_body.position.y, player_pos)
-            rollout(Q, 200, 200, [700, 700])
-        ):
-            counts[(i, j)][a] += 1
-            Q[(i, j)][a] += (G - Q[(i, j)][a]) / counts[(i, j)][a]
-    return Q.items()
+        for i, j, a, G in episode_cost(rollout(m, 0, 0, [10, 10])):
+            count[i][j][a] += 1
+            m[i][j][a] += (G - m[i][j][a]) / count[i][j][a]
+    return m
 
 
-print(improve_policy(None, None))
-
-# def enemy_move(enemy_body, player_body, speed, turn_speed):
-#     TERMINAL = [player_body.positon.x, player_body.positon.y]
-#     episode_cost(rollout())
-
-# keys = pygame.key.get_pressed()
-
-# vx = 0
-
-# if keys[pygame.K_w]:
-#     vx = 1
-# if keys[pygame.K_s]:
-#     vx = -1
-
-# turn = 0
-# if keys[pygame.K_d]:
-#     turn = 1
-# if keys[pygame.K_a]:
-#     turn = -1
-# vx1 = math.cos(body.angle) * speed * vx
-# vy1 = math.sin(body.angle) * speed * vx
-# body.velocity = (vx1, vy1)
-# body.angular_velocity = turn * turn_speed
+improve_policy(None, None)
