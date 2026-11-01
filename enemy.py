@@ -1,8 +1,5 @@
 import physic
 import DRAW
-import random
-import math
-import pymunk
 
 ORANGE = (255, 165, 0)
 GRAY = (128, 128, 128)

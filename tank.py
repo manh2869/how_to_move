@@ -4,6 +4,8 @@ import physic
 import DRAW
 import player
 import enemy
+import auto
+
 
 pygame.init()
 
@@ -39,8 +41,9 @@ while running:
     screen.fill((30, 30, 30))
     running = physic.shoot(space, screen, player_body, enemy_shape, bullet, 25, running)
 
-    player.player_move(player_body, speed, dt)
+    player.player_move(player_body, speed)
     
+    # auto.enemy_move(enemy_body, 200, 1)
 
     player.draw_player(screen, player_body, player_shape, barrel_shape_m, BLUE)
     enemy.draw_enemy(screen, enemy_body, enemy_shape, barrel_shape_e, RED)

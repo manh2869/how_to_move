@@ -2,7 +2,7 @@ import pygame
 import math
 
 
-def move1(body, speed, dt, turn_speed):
+def move1(body, speed, turn_speed):
     keys = pygame.key.get_pressed()
 
     vx = 0
@@ -21,4 +21,4 @@ def move1(body, speed, dt, turn_speed):
     vy1 = math.sin(body.angle) * speed * vx
     body.velocity = (vx1, vy1)
     body.angular_velocity = turn * turn_speed
-    return body.position
+
