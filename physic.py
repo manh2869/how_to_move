@@ -18,7 +18,7 @@ def create_ball(space, position, mass=1, radius=25):
     return [body, shape]
 
 
-def create_box(space, position, mass=1, width=80, height=80):
+def Create_box(space, position, mass=1, width=80, height=80):
     moment = pymunk.moment_for_box(mass, (width, height))
 
     body = pymunk.Body(mass, moment)
