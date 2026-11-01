@@ -9,7 +9,7 @@ GRAY = (128, 128, 128)
 
 
 def create_enemy(space):
-    rec_radius = 20
+    rec_radius = 25
 
     r_main_body, r_main_shape = physic.create_box(
         space, position=(900, 400), mass=5, width=rec_radius * 2, height=rec_radius * 2
