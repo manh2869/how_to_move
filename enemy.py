@@ -9,7 +9,7 @@ def create_enemy(space):
     rec_radius = 25
 
     r_main_body, r_main_shape = physic.Create_box(
-        space, position=(900, 400), mass=5, width=rec_radius * 2, height=rec_radius * 2
+        space, position=(700, 700), mass=5, width=rec_radius * 2, height=rec_radius * 2
     )
     barrel_shape = physic.create_barrel(space, r_main_body, rec_radius)
     r_main_shape.collision_type = 1

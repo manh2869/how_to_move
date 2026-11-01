@@ -6,7 +6,7 @@ import DRAW
 def create_player(space):
     rec_radius = 25
     r_main_body, r_main_shape = physic.Create_box(
-        space, position=(100, 600), mass=10, width=rec_radius * 2, height=rec_radius * 2
+        space, position=(50, 300), mass=10, width=rec_radius * 2, height=rec_radius * 2
     )
     barrel_shape = physic.create_barrel(space, r_main_body, rec_radius)
     return r_main_body, r_main_shape, barrel_shape
