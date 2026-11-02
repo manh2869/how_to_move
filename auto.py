@@ -68,20 +68,37 @@ def improve_policy(enemy_body, player_pos):
     return m
 
 
-def pick_max():
+def pick_max(enemy_body, player_pos):
     m = []
-    a = improve_policy(None, None)
+    a = improve_policy(enemy_body, player_pos)
     for i in a:
         t = []
         for j in i:
             t.append(j.index(max(j)))
         m.append(t)
-    for i in range(len(m[0])):
-        for j in range(len(m)):
-            for a in ACTIONS:
-                if m[i][j] == a:
-                    m[i][j] = A[a]
+
     return m
 
 
-print(pick_max())
+# print(pick_max())
+import math
+
+
+def enemy_move(enemy_body, player_body, speed=120, stop_distance=60):
+    dx = player_body.position.x - enemy_body.position.x
+    dy = player_body.position.y - enemy_body.position.y
+
+    distance = math.hypot(dx, dy)
+
+    if distance <= stop_distance:
+        enemy_body.velocity = (0, 0)
+        return
+
+    angle = math.atan2(dy, dx)
+
+    enemy_body.angle = angle
+
+    vx = math.cos(angle) * speed
+    vy = math.sin(angle) * speed
+
+    enemy_body.velocity = (vx, vy)
