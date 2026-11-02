@@ -2,12 +2,10 @@ import math
 import tank
 import random
 
-
 ACTIONS = [0, 1, 2, 3]
 A = ["R", "L", "U", "D"]
 MOVE = [[1, 0], [-1, 0], [0, 1], [0, -1]]
 rng = random.Random(1)
-
 
 c = [0, 0, 0, 0]
 n = [-math.inf, -math.inf, -math.inf, -math.inf]
@@ -70,9 +68,6 @@ def improve_policy(enemy_body, player_pos):
     return m
 
 
-# print(improve_policy(None,None))
-
-
 def pick_max():
     m = []
     a = improve_policy(None, None)
@@ -81,16 +76,12 @@ def pick_max():
         for j in i:
             t.append(j.index(max(j)))
         m.append(t)
+    for i in range(len(m[0])):
+        for j in range(len(m)):
+            for a in ACTIONS:
+                if m[i][j] == a:
+                    m[i][j] = A[a]
     return m
 
 
-def act():
-    for i in len(pick_max()[0]):
-        for j in len(pick_max()):
-            for a in ACTIONS:
-                if pick_max()[i][j] == a:
-                    pick_max()[i][j] = A[a]
-    return pick_max()
-
-
-print(act())
+print(pick_max())
