@@ -31,7 +31,7 @@ def step(i, j, action, player_pos):
     return nr, nc, -1.0, [nr, nc] == player_pos
 
 
-def rollout(m, i, j, player_pos, max_steps=10000):
+def rollout(m, i, j, player_pos, max_steps=1000):
     trajectory = []
     for _ in range(max_steps):
         if rng.random() < 0.2:
@@ -61,44 +61,51 @@ def episode_cost(trajectory, gamma=0.99):
 def improve_policy(enemy_body, player_pos):
     m = grid(c)
     count = grid(c)
-    for _ in range(10000):
-        for i, j, a, G in episode_cost(rollout(m, 0, 0, [10, 10])):
+    for _ in range(1000):
+        for i, j, a, G in episode_cost(
+            rollout(
+                m,
+                int(player_pos.position.x // 50 - 1),
+                int(player_pos.position.y // 50 - 1),
+                [
+                    int(enemy_body.position.x // 50 - 1),
+                    int(enemy_body.position.y // 50 - 1),
+                ],
+            )
+        ):
             count[i][j][a] += 1
             m[i][j][a] += (G - m[i][j][a]) / count[i][j][a]
     return m
 
 
+# print(improve_policy(None,None))
+
+
 def pick_max(enemy_body, player_pos):
-    m = []
     a = improve_policy(enemy_body, player_pos)
     for i in a:
-        t = []
         for j in i:
-            t.append(j.index(max(j)))
-        m.append(t)
-
-    return m
-
-
-# print(pick_max())
-import math
+            x = MOVE[j.index(max(j))][1] * 200
+            y = MOVE[j.index(max(j))][0] * 200
+            print(j.index(max(j)))
+    enemy_body.velocity = (x, y)
 
 
-def enemy_move(enemy_body, player_body, speed=120, stop_distance=60):
-    dx = player_body.position.x - enemy_body.position.x
-    dy = player_body.position.y - enemy_body.position.y
+# def enemy_move(enemy_body, player_body, speed=120, stop_distance=300):
+#     dx = player_body.position.x - enemy_body.position.x
+#     dy = player_body.position.y - enemy_body.position.y
 
-    distance = math.hypot(dx, dy)
+#     distance = math.hypot(dx, dy)
 
-    if distance <= stop_distance:
-        enemy_body.velocity = (0, 0)
-        return
+#     if distance <= stop_distance:
+#         enemy_body.velocity = (0, 0)
+#         return
 
-    angle = math.atan2(dy, dx)
+#     angle = math.atan2(dy, dx)
 
-    enemy_body.angle = angle
+#     enemy_body.angle = angle
 
-    vx = math.cos(angle) * speed
-    vy = math.sin(angle) * speed
+#     vx = math.cos(angle) * speed
+#     vy = math.sin(angle) * speed
 
-    enemy_body.velocity = (vx, vy)
+#     enemy_body.velocity = (vx, vy)
