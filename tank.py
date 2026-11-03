@@ -45,8 +45,7 @@ def run():
         )
 
         player.player_move(player_body, speed)
-        auto.pick_max(enemy_body, player_body)
-        # auto.enemy_move(enemy_body, player_body, stop_distance=200)
+        # auto.auto(enemy_body, player_body)
 
         player.draw_player(screen, player_body, player_shape, barrel_shape_m, BLUE)
         enemy.draw_enemy(screen, enemy_body, enemy_shape, barrel_shape_e, RED)
