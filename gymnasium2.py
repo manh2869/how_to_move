@@ -2,35 +2,35 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 
-# import time
-
 
 class myenv(gym.Env):
+
     def __init__(self):
 
         self.action_space = spaces.Discrete(4)
 
-        self.observation_space = spaces.Box(
-            low=0, high=20, shape=(5, 5), dtype=np.int32
-        )
+        self.observation_space = spaces.Box(low=0, high=1, shape=(5, 5), dtype=np.int32)
 
         self.state = np.zeros((5, 5), dtype=np.int32)
+
         self.steps = 0
         self.x = 0
         self.y = 0
 
     def reset(self, seed=None, options=None):
+
         super().reset(seed=seed)
 
-        self.state[0][0] = 0
-        self.steps = 0
+        self.state.fill(0)
 
-        observation = np.array([self.state], dtype=np.int32)
-        info = {}
+        self.steps = 0
         self.x = 0
         self.y = 0
 
         self.state[self.y][self.x] = 1
+
+        observation = self.state.copy()
+        info = {}
 
         return observation, info
 
@@ -66,7 +66,9 @@ class myenv(gym.Env):
 
 
 env = myenv()
-env.reset()
+
+observation, info = env.reset()
+
 for i in range(1000):
 
     action = env.action_space.sample()
@@ -76,7 +78,6 @@ for i in range(1000):
     print("Action:", action)
     print("Observation:\n", observation)
     print("Reward:", reward)
-
     if terminated or truncated:
         observation, info = env.reset()
-        print("end")
+        break
