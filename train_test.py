@@ -10,7 +10,7 @@ class myenv(gym.Env):
         self.observation_space = spaces.Box(low=0, high=5, shape=(5, 5), dtype=np.int32)
         self.x = 0
         self.y = 0
-        self.goal = [4, 4]
+        self.goal = (4, 4)
 
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed, options=options)
@@ -38,14 +38,20 @@ class myenv(gym.Env):
         state = np.array([self.x, self.y], dtype=np.int32)
         return state, reward, terminated, False, {}
 
-    def policy(self):
-        if self.x < 5:
-            self.x += 1
-        if self.y < 5:
-            self.y += 1
+
+def policy(state):
+    if state[0] < 4:
+        return 3
+    if state[1] < 4:
+        return 1
 
 
 env = myenv()
 state, info = env.reset()
 while True:
-    env.policy()
+    action = policy(state)
+    state, reward, terminated, truncated, info = env.step(action)
+    if terminated or truncated:
+        print("end")
+        break
+env.close()
