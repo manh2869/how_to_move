@@ -4,6 +4,8 @@ import physic
 import DRAW
 import player
 import enemy
+
+
 # import auto
 
 
@@ -26,15 +28,15 @@ def run():
     clock = pygame.time.Clock()
     space = pymunk.Space()
     space.damping = 1
-
+     
     player_body, player_shape, barrel_shape_m = player.create_player(space)
-    
+
     # maze = physic.create_maze(space)
-    
+
     enemy_body, enemy_shape, barrel_shape_e = enemy.create_enemy(space)
 
     physic.create_ground(space, W, H)
-    
+
     running = True
     speed = 200
 
