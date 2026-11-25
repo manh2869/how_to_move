@@ -3,6 +3,7 @@ from gymnasium import spaces
 import numpy as np
 import random
 
+
 class myenv(gym.Env):
     def __init__(self):
         super().__init__()
@@ -12,6 +13,8 @@ class myenv(gym.Env):
         self.y = 0
         self.goal = (4, 4)
         self.count = 0
+
+        self.q_table = [[[0 for _ in range(4)] for _ in range(5)] for _ in range(5)]
 
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed, options=options)
@@ -40,9 +43,31 @@ class myenv(gym.Env):
         state = np.array([self.x, self.y], dtype=np.int32)
         return state, reward, terminated, self.count > 100, {}
 
+    def rollout(self, max_steps=500):
+        trajectory = []
+        i, j = 0, 0
+        for _ in range(max_steps):
+            _, reward, done, done, _ = self.step(
+                self.policy(self.q_table[self.x][self.y])
+            )
+            trajectory.append([i, j, action, reward])
+            i, j = self.x, self.y
+            if done:
+                break
+        return trajectory
 
-def policy():
-    return random.randint(0, 4)
+    def policy(self, state):
+        if random.randint(0, 10) <= 2:
+            return random.randint(0, 4)
+        return np.argmax(state)
+
+    def trajectory(self):
+        for i in range(100):
+            self.step(self.policy())
+
+
+# def policy():
+#     return random.randint(0, 4)
 
 
 env = myenv()
