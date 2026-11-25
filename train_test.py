@@ -1,7 +1,7 @@
 import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
-
+import random
 
 class myenv(gym.Env):
     def __init__(self):
@@ -11,6 +11,7 @@ class myenv(gym.Env):
         self.x = 0
         self.y = 0
         self.goal = (4, 4)
+        self.count = 0
 
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed, options=options)
@@ -31,26 +32,25 @@ class myenv(gym.Env):
 
         self.x = np.clip(self.x, 0, 5)
         self.y = np.clip(self.y, 0, 5)
+        self.count += 1
 
         terminated = (self.x, self.y) == self.goal
 
         reward = 10 if terminated else -1
         state = np.array([self.x, self.y], dtype=np.int32)
-        return state, reward, terminated, False, {}
+        return state, reward, terminated, self.count > 100, {}
 
 
-def policy(state):
-    if state[0] < 4:
-        return 3
-    if state[1] < 4:
-        return 1
+def policy():
+    return random.randint(0, 4)
 
 
 env = myenv()
 state, info = env.reset()
 while True:
-    action = policy(state)
+    action = policy()
     state, reward, terminated, truncated, info = env.step(action)
+    print(state, reward, terminated, truncated, info)
     if terminated or truncated:
         print("end")
         break
